@@ -37,24 +37,30 @@
         <input type="range" id="ghost-slider" min="-1" max="0" step="1" value="-1">
     </div>
 
-    <div class="control-group">
-        <div class="control-header"><span>GRID RESOLUTION</span></div>
-        <input type="text" id="grid-res" class="draggable" value="64" data-step="1" data-int="true">
+    <div class="draggable-group">
+            <div class="control-group">
+                <div class="control-header"><span>GRID RESOLUTION</span></div>
+                <input type="text" id="grid-res" class="draggable" value="64" data-step="1" data-int="true">
+            </div>
+
+            <div class="control-group">
+                <div class="control-header"><span>APERTURE SIDES</span></div>
+                <input type="text" id="aperture-sides" class="draggable" value="7" data-step="1" data-int="true">
+            </div>
+
     </div>
 
-    <div class="control-group">
-        <div class="control-header"><span>APERTURE SIDES</span></div>
-        <input type="text" id="aperture-sides" class="draggable" value="7" data-step="1" data-int="true">
-    </div>
+    <div class="draggable-group">
+        <div class="control-group">
+            <div class="control-header"><span>APERTURE (f-stop)</span></div>
+            <input type="text" id="aperture-slider" class="draggable" value="0.1" data-step="0.01">
+        </div>
 
-    <div class="control-group">
-        <div class="control-header"><span>APERTURE (f-stop)</span></div>
-        <input type="text" id="aperture-slider" class="draggable" value="0.1" data-step="0.01">
-    </div>
+        <div class="control-group">
+            <div class="control-header"><span>INTENSITY</span></div>
+            <input type="text" id="exposure" class="draggable" value="40" data-step="0.1">
+        </div>
 
-    <div class="control-group">
-        <div class="control-header"><span>INTENSITY</span></div>
-        <input type="text" id="exposure" class="draggable" value="40" data-step="0.1">
     </div>
 
     <div class="control-group">
