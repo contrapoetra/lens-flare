@@ -158,3 +158,16 @@ select {
     transition: opacity 0.5s;
     z-index: 100;
 }
+
+#reset-light-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 8px;
+    background: #ffffff;
+    color: #050505;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    text-transform: uppercase;
+}
