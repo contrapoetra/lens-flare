@@ -71,6 +71,7 @@ let apertureIndex = 3;
 let sensitivity = 1.0;
 let sensorScaleFactor = 0.8;
 let lightDistance = 1.0;
+let maintainAspectRatio = false;
 
 function loadLens(type) {
     activeLens = [];
@@ -262,8 +263,18 @@ function render(currentTime) {
         const elapsedTime = currentTime - animationStartTime;
         const angle = elapsedTime * lightAnimationSpeed; // radians
 
-        const newLx = lightAnimationRadius * Math.cos(angle);
-        const newLy = lightAnimationRadius * Math.sin(angle);
+        let newLx, newLy;
+        if (maintainAspectRatio) {
+            const aspectRatio = canvas.width / canvas.height;
+            const effectiveRadiusX = lightAnimationRadius;
+            const effectiveRadiusY = lightAnimationRadius / aspectRatio;
+
+            newLx = effectiveRadiusX * Math.cos(angle);
+            newLy = effectiveRadiusY * Math.sin(angle);
+        } else {
+            newLx = lightAnimationRadius * Math.cos(angle);
+            newLy = lightAnimationRadius * Math.sin(angle);
+        }
 
         document.getElementById('light-x').value = newLx.toFixed(4);
         document.getElementById('light-y').value = newLy.toFixed(4);
@@ -575,8 +586,12 @@ animateButton.addEventListener('click', () => {
         animationStartTime = performance.now();
         animateButton.innerText = 'Stop Animation';
     } else {
-        animateButton.innerText = 'Animate Light';
     }
+});
+
+const aspectRatioCheckbox = document.getElementById('aspectRatioCheckbox');
+aspectRatioCheckbox.addEventListener('change', (e) => {
+    maintainAspectRatio = e.target.checked;
 });
 
 // finally
