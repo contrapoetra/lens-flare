@@ -70,6 +70,7 @@ let scaleFactor = 150;
 let apertureIndex = 3;
 let sensitivity = 1.0;
 let sensorScaleFactor = 0.8;
+let lightDistance = 1.0;
 
 function loadLens(type) {
     activeLens = [];
@@ -294,14 +295,14 @@ function render(currentTime) {
     smoothLy += (targetLy - smoothLy) * 0.1;
 
     // Current Light Dir
-    const lx = smoothLx, ly = smoothLy, lz = 1.0;
+    const lx = smoothLx, ly = smoothLy, lz = parseFloat(document.getElementById('light-distance-slider').value) || 1.0;
     const len = Math.sqrt(lx*lx + ly*ly + lz*lz);
-    const rayDir = [lx/len, -ly/len, 1.0/len];
+    const rayDir = [lx/len, -ly/len, lz/len];
 
     // Previous Light Dir
     const plx = prevSmoothLx, ply = prevSmoothLy;
     const plen = Math.sqrt(plx*plx + ply*ply + lz*lz);
-    const prevRayDir = [plx/plen, -ply/plen, 1.0/plen];
+    const prevRayDir = [plx/plen, -ply/plen, lz/plen];
 
     gl.clearColor(0,0,0,1); gl.clear(gl.COLOR_BUFFER_BIT);
 
