@@ -12,7 +12,7 @@ out vec4 outColor;
 
 void main() {
     float clip = 1.0 - smoothstep(0.98, 1.02, v_r_rel);
-    if (clip <= 0.0 || v_intensity <= 0.0001) discard;
+    if (v_intensity <= 0.0001) discard;
 
     if (u_renderMode == 3) { // viewing velocity (directional) heatmap
         float speed = length(v_velocity);
