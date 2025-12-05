@@ -1,6 +1,11 @@
-const canvas = document.getElementById('gl-canvas');
+const canvas = document.getElementById('glcanvas');
 const gl = canvas.getContext('webgl2', { alpha: false, antialias: true });
 if (!gl) alert("WebGL 2 not supported");
+
+let isAnimating = false;
+let animationStartTime = 0;
+const lightAnimationRadius = 0.5;
+const lightAnimationSpeed = 0.0005; // Radians per millisecond
 
 // LENS SYSTEMS
 
@@ -22,7 +27,7 @@ const BRENDEL_DATA = [
 const NIKON_DATA = [
     { r: 107.5999, t: 2.5, n: 1.833, v: 33.17, ap: 25.0 }, // L11
     { r: 62.4829, t: 8.8, n: 1.497, v: 82.52, ap: 25.0 }, // L12
-    { r: -378.7547, t: 0.1, n: 1.0, v: 0, ap: 25.0 },
+    { r: -378.7547, t: 0.1, n: 1.0, v: 25.0, ap: 25.0 },
     { r: 62.1920, t: 8.5, n: 1.497, v: 82.52, ap: 25.0 }, // L13
     { r: 2842.4167, t: 1.5, n: 1.0, v: 0, ap: 25.0 }, // d5 (Wide)
     { r: 33.8242, t: 2.0, n: 1.824, v: 41.37, ap: 15.0 }, // L21
@@ -246,8 +251,22 @@ let prevSmoothLx = 0.3, prevSmoothLy = -0.2;
 let currentApertureSides = 7;
 const BLUR_SAMPLES = 8;
 
-function render() {
+function render(currentTime) {
     if (!program || !locs) return;
+
+    if (isAnimating) {
+        if (animationStartTime === 0) {
+            animationStartTime = currentTime;
+        }
+        const elapsedTime = currentTime - animationStartTime;
+        const angle = elapsedTime * lightAnimationSpeed; // radians
+
+        const newLx = lightAnimationRadius * Math.cos(angle);
+        const newLy = lightAnimationRadius * Math.sin(angle);
+
+        document.getElementById('light-x').value = newLx.toFixed(4);
+        document.getElementById('light-y').value = newLy.toFixed(4);
+    }
 
     const uiRes = parseInt(document.getElementById('grid-res').value);
     const mode = document.getElementById('render-mode').value;
@@ -439,6 +458,10 @@ canvas.addEventListener('mousedown', e => {
     isDrag = true;
     lastX = e.clientX;
     lastY = e.clientY;
+    if (isAnimating) {
+        isAnimating = false;
+        document.getElementById('animateButton').innerText = 'Animate Light';
+    }
 });
 window.addEventListener('mouseup', () => isDrag = false);
 window.addEventListener('mousemove', e => {
@@ -490,6 +513,12 @@ document.querySelectorAll('.draggable').forEach(el => {
                 el.blur();
                 document.body.style.cursor = 'ew-resize';
                 canvas.requestPointerLock();
+
+                // Stop animation if light position inputs are dragged
+                if (isAnimating && (el.id === 'light-x' || el.id === 'light-y')) {
+                    isAnimating = false;
+                    document.getElementById('animateButton').innerText = 'Animate Light';
+                }
             }
 
             if (isDragging) {
@@ -532,6 +561,21 @@ document.querySelectorAll('.draggable').forEach(el => {
 document.getElementById('reset-light-btn').addEventListener('click', () => {
     document.getElementById('light-x').value = '0.0000';
     document.getElementById('light-y').value = '0.0000';
+    if (isAnimating) {
+        isAnimating = false;
+        document.getElementById('animateButton').innerText = 'Animate Light';
+    }
+});
+
+const animateButton = document.getElementById('animateButton');
+animateButton.addEventListener('click', () => {
+    isAnimating = !isAnimating;
+    if (isAnimating) {
+        animationStartTime = performance.now();
+        animateButton.innerText = 'Stop Animation';
+    } else {
+        animateButton.innerText = 'Animate Light';
+    }
 });
 
 // finally
