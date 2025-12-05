@@ -187,7 +187,3 @@ select {
     flex-grow: 1;
     margin-top: 0;
 }
-
-#aspectRatioCheckbox {
-    accent-color: #fff;
-}

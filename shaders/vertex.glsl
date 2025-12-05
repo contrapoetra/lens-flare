@@ -203,10 +203,12 @@ void main() {
     float dist = length(vec2(finalPos.x * aspect, finalPos.y));
     float fade = smoothstep(3.0, 1.5, dist);
 
-    gl_Position = vec4(finalPos.x, finalPos.y, 0.0, 1.0);
+    float cX = clamp(finalPos.x, -3.0, 3.0);
+    float cY = clamp(finalPos.y, -3.0, 3.0);
 
-    // v_intensity = curr.intensity * fade * (1.0 / float(u_blurSamples));
-    v_intensity = curr.intensity * (1.0 / float(u_blurSamples));
+    gl_Position = vec4(cX, cY, 0.0, 1.0);
+
+    v_intensity = curr.intensity * fade * (1.0 / float(u_blurSamples));
     v_r_rel = curr.max_r_rel;
     v_texCoord = curr.texCoord;
 
