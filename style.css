@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    font-family: 'Montserrat';
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    background: #050505;
+    color: #ddd;
+    user-select: none;
+}
+
+canvas {
+    display: block;
+}
+
+a {
+    color: #fff;
+    text-decoration: none;
+}
+
+#ui-container {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 300px;
+    background: rgba(30, 30, 30, 0.5);
+    backdrop-filter: blur(100px);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    pointer-events: auto;
+    z-index: 10;
+}
+
+h1 {
+    font-size: 14px;
+    margin: 0 0 15px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #aaa;
+    border-bottom: 1px solid #555;
+    padding-bottom: 5px;
+}
+
+.control-group {
+    margin-bottom: 12px;
+}
+
+.control-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7em;
+    margin-bottom: 7px;
+    margin-top: 20px;
+    color: #888;
+    text-transform: uppercase;
+}
+
+.value {
+    color: #fff;
+    font-weight: bold;
+}
+
+input[type="range"] {
+    width: 100%;
+    cursor: pointer;
+    accent-color: #ffffff;
+    height: 4px;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    background: #444;
+    height: 4px;
+    border-radius: 2px;
+}
+
+input[type="range"]::-moz-range-track {
+    background: #444;
+    height: 4px;
+    border-radius: 2px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background: #ffffff;
+    border: 1px solid #ffffff;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    margin-top: -4px;
+}
+
+input[type="range"]::-moz-range-thumb {
+    background: #ffffff;
+    border: 1px solid #ffffff;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+}
+
+.draggable {
+    width: 100%;
+    background: #222;
+    color: #ffffff;
+    border: 1px solid #444;
+    padding: 4px;
+    border-radius: 4px;
+    cursor: ew-resize;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+.draggable:focus {
+    cursor: text;
+    background: #111;
+    border-color: #ffffff;
+    outline: none;
+    color: #fff;
+}
+
+select {
+    width: 100%;
+    background: #222;
+    color: #fff;
+    font-weight: bold;
+    border: 1px solid #444;
+    padding: 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+#mini-map-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 400px;
+    height: 200px;
+    background: rgba(10, 10, 10, 0.95);
+    border: 1px solid #444;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+#loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #888;
+    font-size: 24px;
+    pointer-events: none;
+    transition: opacity 0.5s;
+    z-index: 100;
+}
