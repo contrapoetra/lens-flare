@@ -171,3 +171,14 @@ select {
     font-size: 11px;
     text-transform: uppercase;
 }
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.button-group .button {
+    flex-grow: 1;
+    margin-top: 0;
+}
