@@ -4,6 +4,9 @@ if (!gl) alert("WebGL 2 not supported");
 
 let isAnimating = false;
 let captureScreenshot = false;
+let lastFrameTime = 0; // For frame timing
+let frameTimes = []; // To store delta times for averaging
+const FRAME_AVERAGE_INTERVAL = 10; // Number of frames to average over
 let animationStartTime = 0;
 const lightAnimationRadius = 0.5;
 const lightAnimationSpeed = 0.0005; // Radians per millisecond
@@ -252,10 +255,22 @@ const SPECTRAL = [{nm:650, rgb:[1,0.1,0.1]}, {nm:530, rgb:[0.15,1.1,0.15]}, {nm:
 let smoothLx = 0.3, smoothLy = -0.2;
 let prevSmoothLx = 0.3, prevSmoothLy = -0.2;
 let currentApertureSides = 7;
-const BLUR_SAMPLES = 8;
 
 function render(currentTime) {
     if (!program || !locs) return;
+
+    if (lastFrameTime !== 0) {
+        const deltaTime = currentTime - lastFrameTime;
+        frameTimes.push(deltaTime);
+
+        if (frameTimes.length >= FRAME_AVERAGE_INTERVAL) {
+            const sumDeltaTime = frameTimes.reduce((a, b) => a + b, 0);
+            const averageDeltaTime = sumDeltaTime / frameTimes.length;
+            console.log(`Average frame time over ${FRAME_AVERAGE_INTERVAL} frames: ${averageDeltaTime.toFixed(2)} ms`);
+            frameTimes = []; // Reset for the next average
+        }
+    }
+    lastFrameTime = currentTime;
 
     if (isAnimating) {
         if (animationStartTime === 0) {
@@ -316,6 +331,8 @@ function render(currentTime) {
     const plen = Math.sqrt(plx*plx + ply*ply + lz*lz);
     const prevRayDir = [plx/plen, -ply/plen, lz/plen];
 
+    const BLUR_SAMPLES = parseInt(document.getElementById('blur-samples').value) || 10;
+
     gl.clearColor(0,0,0,1); gl.clear(gl.COLOR_BUFFER_BIT);
 
     if (mode === 'velocity') {
@@ -373,7 +390,11 @@ function render(currentTime) {
                 gl.drawElementsInstanced(gl.POINTS, indexCount, gl.UNSIGNED_INT, 0, BLUR_SAMPLES);
             } else {
                 gl.uniform1i(locs.renderMode, mode === 'wireframe' ? 1 : 0);
-                gl.drawElementsInstanced(isWire ? gl.LINES : gl.TRIANGLES, indexCount, gl.UNSIGNED_INT, 0, BLUR_SAMPLES);
+                if (parseFloat(document.getElementById('blur-strength').value) == '0') {
+                    gl.drawElements(isWire ? gl.LINES : gl.TRIANGLES, indexCount, gl.UNSIGNED_INT, 0);
+                } else {
+                    gl.drawElementsInstanced(isWire ? gl.LINES : gl.TRIANGLES, indexCount, gl.UNSIGNED_INT, 0, BLUR_SAMPLES);
+                }
             }
         }
     }
@@ -560,6 +581,7 @@ document.querySelectorAll('.draggable').forEach(el => {
                 if(el.id === 'grid-res') val = Math.max(16, val);
                 if(el.id === 'aperture-slider') val = Math.max(0.01, val);
                 if(el.id === 'aperture-sides') val = Math.max(3, val);
+                if(el.id === 'blur-samples') val = Math.max(1, val);
 
                 if(el.dataset.int) el.value = Math.round(val);
                 else el.value = val.toFixed(el.dataset.dec || 2);
