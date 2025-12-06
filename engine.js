@@ -3,6 +3,7 @@ const gl = canvas.getContext('webgl2', { alpha: false, antialias: true });
 if (!gl) alert("WebGL 2 not supported");
 
 let isAnimating = false;
+let captureScreenshot = false;
 let animationStartTime = 0;
 const lightAnimationRadius = 0.5;
 const lightAnimationSpeed = 0.0005; // Radians per millisecond
@@ -378,6 +379,15 @@ function render(currentTime) {
     }
 
     drawMiniMap(selGhost === -1 ? 0 : selGhost, {x:rayDir[0], y:rayDir[1], z:rayDir[2]});
+
+    if (captureScreenshot) {
+        captureScreenshot = false;
+        const link = document.createElement('a');
+        link.download = `lens-flare-${Date.now()}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }
+
     requestAnimationFrame(render);
 }
 
@@ -592,6 +602,12 @@ animateButton.addEventListener('click', () => {
 const aspectRatioCheckbox = document.getElementById('aspectRatioCheckbox');
 aspectRatioCheckbox.addEventListener('change', (e) => {
     maintainAspectRatio = e.target.checked;
+});
+
+window.addEventListener('keydown', e => {
+    if (e.key === 'p' || e.key === 'P') {
+        captureScreenshot = true;
+    }
 });
 
 // finally
